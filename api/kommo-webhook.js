@@ -19,9 +19,17 @@ function sha256(value) {
 }
 
 export default async function handler(req, res) {
+  // 👉 Permitimos GET solo para verificar que la función está viva
+  if (req.method === 'GET') {
+    return res
+      .status(200)
+      .send('✅ Kommo → Meta CAPI webhook is up and running. Use POST to send leads.');
+  }
+
+  // Solo procesamos POST para el webhook
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).end('Method Not Allowed');
+    res.setHeader('Allow', 'GET, POST');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
@@ -82,8 +90,8 @@ export default async function handler(req, res) {
       body:    JSON.stringify({ data: [event] })
     });
     if (!capiResp.ok) {
-      const err = await capiResp.text();
-      throw new Error(`CAPI status ${capiResp.status}: ${err}`);
+      const errText = await capiResp.text();
+      throw new Error(`CAPI status ${capiResp.status}: ${errText}`);
     }
 
     return res.status(200).json({ success: true });
