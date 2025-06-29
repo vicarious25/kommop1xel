@@ -1,0 +1,12 @@
+{
+  "name": "kommo-webhook-capi",
+  "version": "1.0.0",
+  "description": "Webhook de Kommo que envía eventos Lead a Meta CAPI",
+  "main": "api/kommo-webhook.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "axios": "^1.6.5"
+  }
+}
